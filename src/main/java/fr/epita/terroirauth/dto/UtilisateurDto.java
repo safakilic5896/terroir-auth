@@ -3,6 +3,8 @@ package fr.epita.terroirauth.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class UtilisateurDto {
@@ -16,8 +18,10 @@ public class UtilisateurDto {
 
     private String pseudo;
 
-    private int phoneNumber;
+    private String phoneNumber;
 
     private String role;
+
+   private List<MarketDto> marketSelected;
 
 }
