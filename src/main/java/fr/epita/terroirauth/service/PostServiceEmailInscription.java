@@ -34,6 +34,9 @@ public class PostServiceEmailInscription {
         map.put("email", utilisateur.getEmail());
         map.put("role", utilisateur.getRole());
         map.put("idMarkets", utilisateur.getIdMarkets());
+        map.put("fname", utilisateur.getFname());
+        map.put("phoneNumber", utilisateur.getPhoneNumber());
+        map.put("name", utilisateur.getName());
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
         ResponseEntity response = this.restTemplate.postForEntity(url, entity, ResponseEntity.class);
         return response;

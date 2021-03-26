@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
       mailMessage.setSubject("Lien de confirmation par e-mail! pour le site Terroir");
         mailMessage.setFrom("<MAIL>");
         mailMessage.setText(
-                "Merci de votre inscription. Veuillez cliquer sur le lien ci-dessous pour activer votre compte." + "http://localhost:8080/confirm?token="
+                "Merci de votre inscription. Veuillez cliquer sur le lien ci-dessous pour activer votre compte." + "http://localhost:8007/confirm?token="
                         + token);
         emailService.sendEmail(mailMessage);
 
