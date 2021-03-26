@@ -49,6 +49,9 @@ public class JwtTokenUtil implements Serializable {
         customClaims.put("email", user.getEmail());
         customClaims.put("phoneNumber", user.getPhoneNumber());
         customClaims.put("name", user.getName());
+        customClaims.put("fname", user.getFname());
+        customClaims.put("city", user.getCity());
+        customClaims.put("codePostal", user.getCodePostal());
         customClaims.put("pseudo", user.getPseudo());
         customClaims.put("role", user.getRole());
         return Jwts.builder().setClaims(claims).addClaims(customClaims).setIssuedAt(new Date(System.currentTimeMillis()))

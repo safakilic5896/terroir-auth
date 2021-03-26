@@ -2,8 +2,10 @@ package fr.epita.terroirauth.controller;
 
 import fr.epita.terroirauth.database.ConfirmationToken;
 import fr.epita.terroirauth.dto.ConnectionDto;
+import fr.epita.terroirauth.dto.TokenDto;
 import fr.epita.terroirauth.dto.UtilisateurDto;
 import fr.epita.terroirauth.service.ConfirmationTokenService;
+import fr.epita.terroirauth.service.PostServiceEmailInscription;
 import fr.epita.terroirauth.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,12 +26,15 @@ public class UserController {
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
+    @Autowired
+    private PostServiceEmailInscription postServiceEmailInscription;
+
     @PostMapping("/signIn")
     @ApiOperation("api de connexion")
     public ResponseEntity signIn(@RequestBody ConnectionDto connectionDto) {
         try {
             String token = userService.signInUser(connectionDto);
-            return ResponseEntity.ok().body(token);
+            return ResponseEntity.ok().body(TokenDto.builder().token(token).build());
         } catch (Exception e) {
            return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -50,7 +55,9 @@ public class UserController {
     @ApiOperation("api de confirmation du mail")
     public void confirmMail(@RequestParam("token") String token) {
         Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+        optionalConfirmationToken.ifPresent(postServiceEmailInscription::postEmailInscription);
         optionalConfirmationToken.ifPresent(userService::confirmUser);
+
     }
 
 

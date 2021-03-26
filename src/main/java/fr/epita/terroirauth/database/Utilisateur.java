@@ -33,9 +33,15 @@ public class Utilisateur implements UserDetails {
 
     private String pseudo;
 
-    private int phoneNumber;
+    private String phoneNumber;
 
     private String role;
+
+    private String city;
+
+    private String codePostal;
+
+    private String idMarkets;
 
     @Builder.Default
     private Boolean locked = false;

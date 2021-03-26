@@ -4,6 +4,7 @@ import fr.epita.terroirauth.dao.UserDao;
 import fr.epita.terroirauth.database.ConfirmationToken;
 import fr.epita.terroirauth.database.Utilisateur;
 import fr.epita.terroirauth.dto.ConnectionDto;
+import fr.epita.terroirauth.dto.MarketDto;
 import fr.epita.terroirauth.dto.UtilisateurDto;
 import fr.epita.terroirauth.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -38,7 +40,7 @@ public class UserService implements UserDetailsService {
         final Optional<Utilisateur> userAlreadyExisting = userDao.findByEmail(connectionDto.getEmail());
         Utilisateur utilisateur = null;
         if (!userAlreadyExisting.isPresent()) {
-            throw new Exception("L'adresse email ou Le mot de passe que vous avez saisi est incorrect.Si vous n'avez pas crée un compte veuillez en créer un.");
+            throw new Exception("L'adresse email ou le mot de passe que vous avez saisi est incorrect. Si vous n'avez pas crée un compte veuillez en créer un.");
         }
         utilisateur = userAlreadyExisting.get();
         if (!utilisateur.isEnabled()) {
@@ -63,6 +65,10 @@ public class UserService implements UserDetailsService {
                 .pseudo(utilisateurDto.getPseudo())
                 .phoneNumber(utilisateurDto.getPhoneNumber())
                 .role(utilisateurDto.getRole())
+                .city(utilisateurDto.getMarketSelected().stream().map(MarketDto::getCity).collect(Collectors.joining(",")))
+                .codePostal(utilisateurDto.getMarketSelected().stream().map(MarketDto::getCodePostal).collect(Collectors.joining(",")))
+                .idMarkets(utilisateurDto.getMarketSelected().stream().map(marketDto -> String.valueOf(marketDto.getId())).collect(Collectors.joining(",")))
+                .name(utilisateurDto.getName())
                 .build();
         final String encryptedPassword = passwordEncoder.encode(utilisateur.getPassword());
         utilisateur.setPassword(encryptedPassword);
@@ -88,7 +94,7 @@ public class UserService implements UserDetailsService {
       mailMessage.setSubject("Lien de confirmation par e-mail! pour le site Terroir");
         mailMessage.setFrom("<MAIL>");
         mailMessage.setText(
-                "Merci de votre inscription. Veuillez cliquer sur le lien ci-dessous pour activer votre compte." + "http://localhost:8080/confirm?token="
+                "Merci de votre inscription. Veuillez cliquer sur le lien ci-dessous pour activer votre compte." + "http://localhost:8007/confirm?token="
                         + token);
         emailService.sendEmail(mailMessage);
 
